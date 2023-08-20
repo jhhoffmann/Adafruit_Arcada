@@ -22,6 +22,7 @@ class Adafruit_Arcada_SPITFT;
 #include "Boards/Adafruit_Arcada_HalloWingM0.h"
 #include "Boards/Adafruit_Arcada_HalloWingM4.h"
 #include "Boards/Adafruit_Arcada_MONSTERM4SK.h"
+#include "Boards/Adafruit_Arcada_PicoHomemade.h"
 #include "Boards/Adafruit_Arcada_PyBadge.h"
 #include "Boards/Adafruit_Arcada_PyGamer.h"
 #include "Boards/Adafruit_Arcada_PyGamerAdvance.h"

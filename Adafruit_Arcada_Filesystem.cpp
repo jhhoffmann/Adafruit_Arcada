@@ -18,7 +18,9 @@ SdFat Arcada_SD_FileSys;
 #endif
 #endif
 
-#if defined(PIN_QSPI_SCK)
+#if defined(ARDUINO_ARCH_RP2040)
+Adafruit_FlashTransport_RP2040 flashTransport;
+#elif defined(PIN_QSPI_SCK)
 Adafruit_FlashTransport_QSPI flashTransport(PIN_QSPI_SCK, PIN_QSPI_CS,
                                             PIN_QSPI_IO0, PIN_QSPI_IO1,
                                             PIN_QSPI_IO2, PIN_QSPI_IO3);

@@ -2,6 +2,10 @@
 #ifndef ARCADATYPE
 #define ARCADATYPE
 
+#if defined(ARDUINO_ARCH_RP2040)
+#define File File32
+#endif
+
 #include <Adafruit_ImageReader.h> // Image-reading functions
 #include <Adafruit_SPIFlash.h>
 #include <Adafruit_WavePlayer.h>
