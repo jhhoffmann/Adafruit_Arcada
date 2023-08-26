@@ -40,11 +40,30 @@
 
 class Adafruit_Arcada : public Adafruit_Arcada_SPITFT {
 private:
-    static const int ARCADA_KEYPAD_ROWS = 4;
-    static const int ARCADA_KEYPAD_COLS = 4;
+    static const uint8_t ARCADA_KEYPAD_ROWS = 4;
+    static const uint8_t ARCADA_KEYPAD_COLS = 4;
 
-    // define the buttons of the keypad
-    static constexpr int arcadaKeypadKeys[ARCADA_KEYPAD_ROWS][ARCADA_KEYPAD_COLS] = {
+    // Define the buttons of the keypad. Keypad is 4x4 but we only need 8 buttons.
+    // Hold keypad diagonally and use the 8 buttons in each 2x2 corner of the keypad.
+    // Define 2 sets of buttons so keypad can be held in either of 2 diagonal orientations.
+    //
+    // "R" is staRt, "C" is seleCt, "+" are the pins, ASCII arrow points to top orientation:
+    //
+    //    . .  R A  *--
+    // +  . .  C B  |\  
+    // +            | \ 
+    // +  U R  . .     \ 
+    //    L D  . .
+    //
+    // or
+    //
+    //    A B  . .
+    // +  R C  . .     /
+    // +            | /
+    // +  . .  R D  |/
+    //    . .  U L  *--
+    //
+    static constexpr uint8_t arcadaKeypadKeys[ARCADA_KEYPAD_ROWS][ARCADA_KEYPAD_COLS] = {
         { ARCADA_BUTTONMASK_A, ARCADA_BUTTONMASK_B, ARCADA_BUTTONMASK_START, ARCADA_BUTTONMASK_A },
         { ARCADA_BUTTONMASK_START, ARCADA_BUTTONMASK_SELECT, ARCADA_BUTTONMASK_SELECT, ARCADA_BUTTONMASK_B },
         { ARCADA_BUTTONMASK_UP, ARCADA_BUTTONMASK_RIGHT, ARCADA_BUTTONMASK_RIGHT, ARCADA_BUTTONMASK_DOWN },
@@ -57,19 +76,19 @@ private:
         ARCADA_KEYPAD_C1, ARCADA_KEYPAD_C2, ARCADA_KEYPAD_C3, ARCADA_KEYPAD_C4
     };
 
-    static const unsigned int ARCADA_KEYPAD_SETTLING_DELAY = 20;
+    static const uint8_t ARCADA_KEYPAD_SETTLING_DELAY = 20;
 
 public:
     Adafruit_Arcada(void) {};
 
     bool variantBegin(void)
     {
-        for (int i = 0; i < ARCADA_KEYPAD_COLS; i++) {
+        for (uint8_t i = 0; i < ARCADA_KEYPAD_COLS; i++) {
             pinMode(arcadaKeypadColPins[i], OUTPUT);
             digitalWrite(arcadaKeypadColPins[i], HIGH);
         }
 
-        for (int i = 0; i < ARCADA_KEYPAD_ROWS; i++) {
+        for (uint8_t i = 0; i < ARCADA_KEYPAD_ROWS; i++) {
             pinMode(arcadaKeypadRowPins[i], INPUT_PULLUP);
         }
 
@@ -79,16 +98,15 @@ public:
     uint32_t variantReadButtons(void)
     {
         uint32_t buttons = 0;
-        for (int i = 0; i < ARCADA_KEYPAD_COLS; i++) {
+        for (uint8_t i = 0; i < ARCADA_KEYPAD_COLS; i++) {
             digitalWrite(arcadaKeypadColPins[i], HIGH);
         }
 
-        for (int c = 0; c < ARCADA_KEYPAD_COLS; c++) {
+        for (uint8_t c = 0; c < ARCADA_KEYPAD_COLS; c++) {
             digitalWrite(arcadaKeypadColPins[c], LOW);
             delayMicroseconds(ARCADA_KEYPAD_SETTLING_DELAY);
-            for (int r = 0; r < ARCADA_KEYPAD_ROWS; r++) {
-                bool pressed = !digitalRead(arcadaKeypadRowPins[r]);
-                if (pressed) {
+            for (uint8_t r = 0; r < ARCADA_KEYPAD_ROWS; r++) {
+                if (!digitalRead(arcadaKeypadRowPins[r])) {
                     buttons = buttons | arcadaKeypadKeys[r][c];
                 }
             }
